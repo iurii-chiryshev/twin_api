@@ -91,12 +91,12 @@ class TwinInterpreter:
 
 if __name__ == "__main__":
     # create twin api
-    api = TwinAPI(url = DEF_URL, token=DEF_TOKEN)
+    #api = TwinAPI(url = DEF_URL, token=DEF_TOKEN)
     # получить все намерения, зарегистрированные для агента
-    intent_types = api.intent_types(DEF_AGENT_UUID)
+    #intent_types = api.intent_types(DEF_AGENT_UUID)
     # create twin интерпретатор
-    twin = TwinInterpreter(api=api,agent_uuid=DEF_AGENT_UUID,timezone=DEF_TIMEZONE)
+    #twin = TwinInterpreter(api=api,agent_uuid=DEF_AGENT_UUID,timezone=DEF_TIMEZONE)
     # распарсить запрос
-    intent, entities = twin.parse("Привет Тоша, меня зовут Татьяна Ивановна")
-    print(intent)
-    pass
+    #intent, entities = twin.parse("Привет Тоша, меня зовут Татьяна Ивановна")
+    #print(intent)
+    #pass
