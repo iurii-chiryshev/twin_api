@@ -10,6 +10,35 @@ class ActionHandler:
         self.last_entities = None # последние обработанные сущности
         self.confidence = confidence # порог принятия решения
 
+
+    @staticmethod
+    def get_any_entity(entities: list, name: str, default = None):
+        """
+        Вернет первую попавшуюся сущность (dict) с указанным именем или default
+        :param entities: список сущностей
+        :param name: имя сущности, кранится по ключу 'entity'
+        :param default:
+        :return:
+        """
+        for item in entities:
+            if item.get('entity','') == name:
+                return item
+        return default
+
+    @staticmethod
+    def get_all_entities(entities: list, name: str):
+        """
+        Вернет все сущности с указанным именем
+        :param entities: список сущностей
+        :param name: имя сущности, кранится по ключу 'entity'
+        :return:
+        """
+        result = list()
+        for item in entities:
+            if item.get('entity', '') == name:
+                result.append(item)
+        return result
+
     def process(self,intent, entities):
         """
         Основной метод, который обрабатывает входные намерения
@@ -85,6 +114,28 @@ class ActionHandler:
         :return:
         """
         return self.process(self.last_intent,self.last_entities)
+
+    def on_twin_way(self,intent, entities):
+        """
+        Как обрабатываем просьбу "справшивают путь"
+        :param intent:
+        :param entities:
+        :return:
+        """
+        ways = list()
+        # обрабатываем каждую сущость, которая может ходить с данным интентом
+        if self.get_any_entity(entities,'swimming_pool'):
+            ways.append("Бассейн находится прямо по коридору")
+        if self.get_any_entity(entities,'music_room'):
+            ways.append("Музыкальный зал находится на втором этаже")
+        if self.get_any_entity(entities,'teaching_room'):
+            ways.append("Методическй кабинет закрыт на ремонт")
+        #  формируем ответ
+        if len(ways) > 0:
+            return ". ".join(ways)
+        else:
+            return self.on_default(intent,entities)
+
 
 class DialogTracker:
     """
