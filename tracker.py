@@ -151,6 +151,9 @@ class ActionHandler:
             :param times:
             :return:
             """
+            now_date = datetime.datetime.now().strftime('%Y-%m-%d')
+            if date != now_date:
+                return "Меню на {date} нет".format(date=date)
             return "Меню на {date}, время - {times}".format(date=date,times = ", ".join(times))
         # вытаскиваем дату или ставим текущую
         now_date = datetime.datetime.now().strftime('%Y-%m-%d')
