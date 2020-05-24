@@ -1,6 +1,7 @@
 from interpreter import TwinInterpreter
 import random
 import logging
+import datetime
 
 logging.basicConfig(format="%(levelname)s %(asctime)s - %(message)s")
 
@@ -135,6 +136,43 @@ class ActionHandler:
             return ". ".join(ways)
         else:
             return self.on_default(intent,entities)
+
+    def on_ask_menu(self,intent, entities):
+        """
+
+        :param intent:
+        :param entities:
+        :return:
+        """
+        def prepare_menu(date: str, times: list):
+            """
+            Сходить в БД, получить меню
+            :param date:
+            :param times:
+            :return:
+            """
+            return "Меню на {date}, время - {times}".format(date=date,times = ", ".join(times))
+        # вытаскиваем дату или ставим текущую
+        now_date = datetime.datetime.now().strftime('%Y-%m-%d')
+        time_entity = self.get_any_entity(entities,'time',dict())
+        date = time_entity.get('value',now_date).split('T')[0]
+        # смотрим какое время хотят
+        TIMES = (
+            ("time_breakfast","завтрак"),
+            ("time_dinner","обед"),
+            ("time_afternoon_tea","полдник"),
+            ("time_supper","ужин")
+        )
+        times = list()
+        for e,v in TIMES:
+            if self.get_any_entity(entities,e):
+                times.append(v)
+        if len(times) < 1:
+            times = [item[1] for item in TIMES]
+        # возвращаем результат
+        return prepare_menu(date,times)
+
+
 
 
 class DialogTracker:
